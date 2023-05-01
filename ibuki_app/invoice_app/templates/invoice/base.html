@@ -1,0 +1,41 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}デフォルトタイトル {%endblock%}</title>
+    {%block extra_head %}{% endblock %}
+    <!-- 必要に応じてCSSファイルへのリンクを追加 -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header id="header">
+        <h3>請求計算ソフト いぶき</h3>
+        <nav>
+            <ul>
+                <li><a href="{% url 'input' %}">実績登録</a></li>
+                <li><a href="{% url 'client_add' %}">利用者登録</a></li>
+                <li><a href="{% url 'main' %}">TOP</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2023 いぶき 請求計算ソフト. All Rights Reserved.</p>
+        <nav>
+            <ul>
+                <li><a href="">お問い合わせ</a></li>
+                <li><a href="">利用規約</a></li>
+                <li><a href="">プライバシーポリシー</a></li>
+            </ul>
+        </nav>
+    </footer>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

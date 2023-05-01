@@ -1,0 +1,29 @@
+# docker-compose.ymlのバージョンを指定
+version: '3'
+
+# 作成するコンテナ。dbとwebの２つを作成
+services:
+  # データベース
+  db:
+    # 使用するイメージを指定
+    image: postgres
+    # 環境変数を設定。DBをpostgres、USER・PASSWORDは任意の値を設定
+    environment:
+      - POSTGRES_DB=ibuki
+      - POSTGRES_USER=ibuki
+      - POSTGRES_PASSWORD=password
+  # Djangoアプリ
+  web:
+    # 指定したディレクトリ内のdockerfileからコンテナを作成する。ファイル名の指定がない場合はdockerfileを選択
+    build: .
+    # コンテナ内で実行するコマンド(manage.pyのrunserverを実行。8000のサーバーを起動)
+    command: python3 manage.py runserver 0.0.0.0:8000
+    # ホストのディレクトリをコンテナ内の指定したディレクトリと連動させる(ホスト:コンテナ。ホストのプロジェクトフォルダとコンテナ内の/codeを同期)
+    volumes:
+      - .:/code
+    # ホスト側のポートを、コンテナ側の指定したポートに繋ぐ("ホスト:コンテナ"。localhost:8000にアクセスすると、コンテナ内の8000ポートに繋がる)
+    ports:
+      - "8000:8000"
+    # データベースの依存関係を指定(webコンテナをdbコンテナと接続する)
+    depends_on:
+      - db
