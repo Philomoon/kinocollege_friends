@@ -1,0 +1,23 @@
+{% extends 'ec_app/base.html' %} {% block title %}{{ target.product_name }}{% endblock %}
+{% block content %}
+
+<div class="row mt-6 fs-4" style='margin-bottom: 75px; margin-top: 50px;'>
+  <p id="msg"></p>
+  <div class="col" style='width: 400px; height:300px'>
+    {% if target.img.url is None %}
+    <p>画像がありません</p>
+    {% else %}
+    <img class="img-fluid" src="{{ target.img.url }}" alt="" style='height: 100%;'>
+    {% endif %}
+  </div>
+  <div class="col">
+    <div><p>ID:{{ target.id }} {{ target.product_name }}</p></div>
+    <div class="mb-4">{{ target.price }}円</div>
+    <div class="mb-2 fw-bold">商品詳細</div>
+    <div>{{ target.product_detail }}</div>
+    <button class='btn btn-primary add_cart mt-4' id="{{ target.id }}">カートに入れる</button>
+    <a href="{% url 'product_list' %}" class='btn btn-primary mt-4'>戻る</a>
+  </div>
+</div>
+
+{% endblock %}

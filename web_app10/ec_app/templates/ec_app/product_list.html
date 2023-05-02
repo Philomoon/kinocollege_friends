@@ -1,0 +1,43 @@
+{% extends 'ec_app/base.html' %} {% block title %}商品一覧{% endblock %}
+{% block content %}
+<h1 class='fw-bold mt-5'>{{ title }}</h1>
+<p id='msg'></p>
+<div style=" flex-wrap: wrap">
+  <!-- 問 5-3-1 div style=flex-wrap: wrap が指定されている div タグの下にサンプルコードを追加しましょう。 -->
+  {% if pickups %}
+  <h2>新着商品</h2>
+  <div class='d-flex flex-wrap' style="margin-bottom: 100px;">
+    {% for pickup in pickups %}
+    <div class="card" style="width: 18rem; margin: 10px">
+      <img src="/media/{{ pickup.img }}" class="card-img-top" style="height: 200px; object-fit: contain;">
+      <div class="card-body">
+        <div style="display: flex; flex-direction: row" class='mb-3'>
+          <h5 class="card-title fw-bold">{{ pickup.product_name }}</h5>
+          <div class='badge bg-secondary ms-2 lh-base' style='height: fit-content;'>{{ pickup.category }}</div>
+        </div>
+        <a href="{% url 'product_detail' pickup.id %}" class="btn btn-primary">詳細を見る</a>
+        <button class="btn btn-primary add_cart" id="{{pickup.id}}">カートに入れる</button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="d-flex flex-wrap">
+    {% for product in products %}
+    <div class="card" style="width: 18rem; margin: 10px">
+      <img src="/media/{{ product.img }}" class="card-img-top" style="height: 200px; object-fit: contain;">
+      <div class="card-body">
+        <div style="display: flex; flex-direction: row" class='mb-3'>
+          <h5 class="card-title fw-bold">{{ product.product_name }}</h5>
+          <div class='badge bg-secondary ms-2 lh-base' style="height: fit-content;">{{ product.category }}</div>
+        </div>
+        <a href="{% url 'product_detail' product.id %}" class="btn btn-primary">詳細を見る</a>
+        <button class="btn btn-primary add_cart" id="{{ product.id }}">カートに入れる</button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'ec_app/base.html' %} {% block title %}商品検索{% endblock %}
+{% block content %}
+
+<p id="msg" class="text-danger">{{ msg }}</p>
+<h1 class='fw-bold mt-5'>商品検索</h1>
+<form action="{% url 'search_product' %}" method='POST' id="form">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <p>
+    <label for="search_text">キーワード検索</label>
+    <input type="text" name='search_text' class="form-control" id="search_text">
+  </p>
+  <button class="btn btn-primary">検索する</button>
+</form>
+<script>
+  $('.btn').on('click', function(e){
+    e.preventDefault()
+    let category = $('#id_category').val()
+    let text = $('#search_text').val()
+    // category と text がどちらも空欄で submit された時
+    if ( category == '' && text == '' ) {
+      $('#msg').html('検索条件を入力してください。')
+    }
+    else {
+      $('#form').submit()
+    }
+  })
+</script>
+{% endblock %}

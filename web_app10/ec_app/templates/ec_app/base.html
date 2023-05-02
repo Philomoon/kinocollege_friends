@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>{% block title %}{% endblock %}</title>
+    <!--  Bootstrapを使えるようにする -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+      body {
+        padding-top: 70px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{% url 'home' %}">ECアプリ</a>
+        </div>
+        <div class="container-fluid">
+          <!-- 問 4-2-1 コンテンツに「検索」が入っている a タグの href 属性に、search_product を指定しましょう。 -->
+          <a class="navbar-brand" href="">検索</a>
+        </div>
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{% url 'mycart' %}">カート</a>
+        </div>
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{% url 'logout' %}">ログアウト</a>
+        </div>
+      </nav>
+    </header>
+    <div class="container">{% block content %}{% endblock %}</div>
+    {% load static %}
+    <script src="{% static 'js/ajax.js' %}"></script>
+    <script>
+      $(".add_cart").on('click', function(e){
+        // btnの機能を無効にする
+        e.preventDefault()
+        // idを取得する
+        let id = $(this).attr('id')
+        // Orderテーブルに紐づける
+        $.ajax({
+          url:"{% url 'add_cart' %}",
+          type:'POST',
+          data:{
+            'id':id,
+          },
+          dataType:'json'
+        }).done(function(response){
+          $('#msg').html(response.msg)
+        })
+      })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,33 @@
+{% extends 'ec_app/base.html' %} {% block title %}ECアプリ{% endblock %}
+{% block content %}
+{% load static %}
+<h1 class='fw-bold mt-5'>ECアプリ</h1>
+<div class='d-flex justify-content-between mt-5'>
+  <div class="card" style="width: 18rem;">
+    <img src="{% static 'images/shopping.png' %}" class="card-img-top" style='width: 18rem; height: 16rem; object-fit: contain;' alt="...">
+    <div class="card-body">
+      <a href="{% url 'product_list' %}"class="btn btn-primary" >買い物を始める</a>
+    </div>
+  </div>
+  <div class="card" style="width: 18rem;">
+    <img src="{% static 'images/search.png' %}" class="card-img-top" style='width: 18rem; height: 16rem; object-fit: contain;' alt="...">
+    <div class="card-body">
+      <!-- 問 4-3-1 コンテンツに「検索する」が入っている a タグの href 属性に、search_product を指定しましょう。 -->
+      <a href="" class='btn btn-primary'>検索する</a>
+    </div>
+  </div>
+  <div class="card" style="width: 18rem;">
+    <img src="{% static 'images/history.png' %}" class="card-img-top" style='width: 18rem; height: 16rem; object-fit: contain;' alt="...">
+    <div class="card-body">
+      <a href="{% url 'purchase_history' %}" class='btn btn-primary'>購入履歴を見る</a>
+    </div>
+  </div>
+  <!-- 問 2-2-1 購入するリンクが入った一かたまりの div の下に、status == 9 の時に表示される条件式を追加しましょう。 -->
+
+  <!-- 問 2-2-2 条件式の中に、商品登録画面カードを追加しましょう。 -->
+
+
+</div>
+
+
+{% endblock %}

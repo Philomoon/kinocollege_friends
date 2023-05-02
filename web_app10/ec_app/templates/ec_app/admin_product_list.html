@@ -1,0 +1,46 @@
+{% extends 'ec_app/base.html' %} {% block title %}商品登録{% endblock %}
+{% block content %}
+<h1 class='mt-5'>{{ title }}</h1>
+{% if msg %}
+<p>{{msg}}</p>
+{% endif %}
+<!-- 問 3-4-3 form の action 属性に admin_product_list を指定しましょう。 -->
+<form action="" method="POST">
+  {% csrf_token %}
+  {% if products %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th style="width: 300px">画像</th>
+        <th>商品名</th>
+        <th>価格</th>
+        <th>カテゴリー</th>
+        <th>編集</th>
+        <th>削除</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- 問 3-4-1 テーブルの項目ごとに products の中身を表示させましょう。 -->
+      {% for product in products %}
+      <tr>
+        <td>{{ product.id }}</td>
+        <td><img class='img-thumbnail w-50 h-50' src="/media/{{ product.img }}" alt=""></td>
+        <td><input type="text" name="counter_{{ product.id }}" value=""></td>
+        <td><input type="number" name="counter_{{ product.id }}" value=""></td>
+        <td>{{ product.category }}</td>
+        <!-- 問 3-4-2 編集 button に name を btn_edit、削除 button に name を btn_delete とそれぞれ当てましょう。 -->
+        <td><button name='' class="btn btn-primary" value="{{ product.id }}">編集</button></td>
+        <td><button name='' class="btn btn-danger" value="{{ product.id }}">削除</button></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <h2>商品が登録されていません。</h2>
+  {% endif %}
+  <!-- 問 3-4-4 登録画面へというコンテンツが入った a タグの href 属性に admin_register_product を指定しましょう。 -->
+  <a class='btn btn-primary' href="">登録画面へ</a>
+</form>
+
+{% endblock %}

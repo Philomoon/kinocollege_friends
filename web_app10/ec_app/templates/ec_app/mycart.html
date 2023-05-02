@@ -1,0 +1,113 @@
+{% extends 'ec_app/base.html' %} {% block title %}カート{% endblock %}
+{% block content %}
+
+<p id="msg"></p>
+{% if succece %}
+<h1 class='text-center mt-5' style='word-break: keep-all; margin: 0 auto; width: 800px;'>{{ succece }}</h1>
+{% else %}
+<h1 class='fw-bold mt-5'>カートの商品</h1>
+{% if mycart %}
+<form action="{% url 'mycart' %}" method="POST">
+  {% csrf_token %}
+  <table class="table">
+    <thead class="table-primary">
+      <tr>
+        <th>id</th>
+        <th>サムネイル</th>
+        <th>商品名</th>
+        <th>数量</th>
+        <th>金額</th>
+        <th>削除</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in mycart %}
+      <tr class="tbody">
+        <td>{{ order.product.id }}</td>
+        <td><img src="{{ order.product.img.url }}" alt="" style='object-fit:contain; height: 50px;'></td>
+        <td>{{ order.product.product_name }}</td>
+        <td class="qty"><input type="text" maxlength="2" 
+          oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+          value="{{ order.qty }}" name="{{ order.id }}"
+          />
+        </td>
+        <td class='price' data-price="{{ order.product.price }}">{{ order.product.price }}円</td>
+        <!-- 各商品の合計金額を格納する -->
+        <input class='subtotal' type="hidden">
+        <td>
+          <button type="button" class='btn btn-danger delete' id="{{ order.id }}">カートから削除</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="d-flex flex-column align-items-end">
+    <div class="float-right ">
+      <p class='fw-bold mb-1'>合計</p>
+      <p id="total_amount"></p>
+    </div>
+    <button class='btn btn-primary pull-right'>決済に進む</button>
+  </div>
+</form>
+{% else %}
+<p class='fs-4'>カートの中身がありません。</p>
+{% endif %}
+{% endif %}
+<script>
+  $('.delete').on('click', function(e) {
+    e.preventDefault()
+    let button = $(this)
+    let id = $(this).attr('id')
+    $.ajax({
+      type:'POST',
+      url:"{% url 'delete' %}",
+      dataType:'json',
+      data:{
+        'id':id,
+      }
+    }).done(function(response) {
+      if ( response.boo ) {
+        button.parents('.tbody').remove()
+      }
+      $('#msg').html(response.msg)
+    })
+  })
+
+
+  // tbodyのtrタグが読み込まれるたびに発火するイベント
+  $('.tbody').each(function(){
+    subtotal($(this))
+  })
+  // 商品の注文数量が変更された際に発火するイベント
+  $("input[type='text']").on('input', function() { //
+    subtotal($(this).parents('.tbody')) //
+    $.ajax({
+      url:"{% url 'change_qty' %}",
+      data:{
+        qty:$(this).val(),
+        id:$(this).attr('name')
+      },
+      type:'POST',
+      dataType:'json'
+    })
+  })
+
+  // 小計を商品ごとに変更させる関数
+  function subtotal(tbody){
+    let qty = tbody.find("input[type='text']").val()
+    let price = tbody.find(".price").data('price')
+    // 商品の小計がsum_priceに格納される
+    let sum_price = Number(qty) * Number(price)
+    tbody.find("input[type='hidden']").val(sum_price)
+    total_amount()
+  }
+  // 小計を合計する
+  function total_amount(){
+    let total_amount = 0
+    $('.subtotal').each(function(){
+      total_amount += Number($(this).val())
+    })
+    $('#total_amount').html(`${total_amount}円`)
+  }
+</script>
+{% endblock %}

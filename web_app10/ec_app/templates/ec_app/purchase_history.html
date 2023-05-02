@@ -1,0 +1,43 @@
+{% extends 'ec_app/base.html' %} {% block title %}購入履歴{% endblock %}
+{% block content %}
+
+<p id="msg">{{ msg }}</p>
+<h1 class='mt-5'>購入履歴</h1>
+{% if purchase_historys %}
+<form action="{% url 'purchase_history' %}" method="POST">
+  {% csrf_token %}
+  <table class="table">
+    <thead class="table-primary">
+      <tr>
+        <th>商品ID</th>
+        <th>サムネイル</th>
+        <th>商品名</th>
+        <th>数量</th>
+        <th>金額</th>
+        <th>購入日</th>
+        <th>もう一度購入する</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for purchase_history in purchase_historys %}
+      <tr class="tbody">
+        <td>{{ purchase_history.product.id }}</td>
+        <td><img src="{{ purchase_history.product.img.url }}" alt="" style='object-fit:contain; height: 50px;'></td>
+        <td>{{ purchase_history.product }}</td>
+        <td class="qty">{{ purchase_history.qty }}</td>
+        {% load mathfilters %}
+        <td class='price'>{{ purchase_history.product.price|mul:purchase_history.qty }}円</td>
+        <td>{{ purchase_history.ordered_at }}</td>
+        <td><button class='btn btn-primary' value="{{ purchase_history.id }}" name='id'>カートに追加する</button></td>
+        <!-- 各商品の合計金額を格納する -->
+        <input class='subtotal' type="hidden">
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</form>
+{% else %}
+<p>カートの中身がありません。</p>
+{% endif %}
+
+{% endblock %}
