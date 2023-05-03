@@ -13,9 +13,9 @@ import datetime
 # ホーム
 def home(request):
     # 問 1-15-1-1 ログインユーザーの status を status 変数に格納しましょう。
-
+    status = request.status
     # 問 1-15-1-2 render メソッドの第三引数で、キー：status、バリュー：status として渡しましょう。
-    return render(request,'ec_app/home.html')
+    return render(request,'ec_app/home.html',status='status')
 
 # ログアウト
 class Logout(LogoutView):

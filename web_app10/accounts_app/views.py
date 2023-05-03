@@ -15,10 +15,11 @@ def accounts_signup(request):
                 # アカウント登録時に開きたい path name を指定する
                 return redirect('home')
     # 問 1-14-1 accounts_signup 関数の POST メソッドの条件式に else を追加しましょう。
-
+    else:
         form = SignupForm()
         # 問 1-14-2 else の処理の中に、request.path の中に admin という文字が入っているかの条件式を追加して、入っていたら form の statusField に初期値 9 を指定しましょう。
-
+        if 'admin' in 'admin':
+            form.fields['status'].initial = 9
     params = {
         'form':form,
     }
