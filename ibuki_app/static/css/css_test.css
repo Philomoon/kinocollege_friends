@@ -1,0 +1,90 @@
+/* 全体の設定 */
+body {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* ヘッダー */
+header {
+    background-color: #3a3a3a;
+    padding: 20px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+header h3 {
+    color: #fff;
+    font-size: 24px;
+    margin: 0;
+    padding-left: 20px;
+}
+
+/* ナビゲーション */
+nav {
+    text-align: center;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* メインコンテンツ */
+main {
+    padding: 20px;
+}
+
+/* フッター */
+footer {
+    background-color: #3a3a3a;
+    padding: 20px 0;
+    color: #fff;
+}
+
+footer p {
+    text-align: center;
+    margin: 0;
+    padding-bottom: 20px;
+}
+
+footer nav {
+    text-align: center;
+}
+
+footer nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+footer nav li {
+    display: inline;
+    margin-right: 20px;
+}
+
+footer nav a {
+    color: #fff;
+    text-decoration: none;
+}
+
+footer nav a:hover {
+    text-decoration: underline;
+}
