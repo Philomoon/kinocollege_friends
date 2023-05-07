@@ -9,8 +9,8 @@ services:
     image: postgres
     # 環境変数を設定。DBをpostgres、USER・PASSWORDは任意の値を設定
     environment:
-      - POSTGRES_DB=ibuki
-      - POSTGRES_USER=ibuki
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
   # Djangoアプリ
   web:

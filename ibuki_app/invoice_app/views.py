@@ -6,13 +6,13 @@ from django.http import HttpResponse
 def main(request):
     # render関数は、HTMLページを指定して、HTTPレスポンスとしてブラウザに返す
     # 1つ目の引数にrequestオブジェクト、2つ目の引数にテンプレート名
-    return render(request, 'invoice/main.html')
+    return render(request, 'invoice_app/base.html')
 
 def client_add(request):
 
-    return render(request, 'invoice/client_add.html')
+    return render(request, 'invoice_app/client_add.html')
 
 
 def input(request):
 
-    return render(request,'invoice/input.html')
+    return render(request,'invoice_app/input.html')
