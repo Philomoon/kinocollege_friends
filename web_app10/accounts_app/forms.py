@@ -10,7 +10,7 @@ class SignupForm(UserCreationForm):
     class Meta:
         model = get_user_model()
         # 問 1-16-1 SignupForm クラスの fields に status を追加しましょう。
-        fields = ('username', 'password1', 'password2')
+        fields = ('username', 'password1', 'password2','status')
         labels = {
             'username':'ユーザー名',
             'password1':'パスワード',
@@ -20,7 +20,7 @@ class SignupForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
         # 問 1-16-2 init 関数の for 文の上に statusField を hidden にする記述を追加しましょう。
-
+        self.fields['status'].widget = forms.HiddenInput()
         for field in self.fields.values():
             field.widget.attrs['placeholder'] = field.label
 
