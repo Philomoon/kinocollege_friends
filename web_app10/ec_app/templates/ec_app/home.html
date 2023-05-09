@@ -23,10 +23,15 @@
     </div>
   </div>
   <!-- 問 2-2-1 購入するリンクが入った一かたまりの div の下に、status == 9 の時に表示される条件式を追加しましょう。 -->
-
+  {% if status == 9 %}
   <!-- 問 2-2-2 条件式の中に、商品登録画面カードを追加しましょう。 -->
-
-
+    <div class="card" style="width: 18rem;">
+      <img src="{% static 'images/CMS.png' %}" class="card-img-top" style='width: 18rem; height: 16rem; object-fit: contain;' alt="...">
+      <div class="card-body">
+        <a href="admin_register_product" class='btn btn-primary'>商品登録画面</a>
+      </div>
+    </div>
+  {% endif %}
 </div>
 
 

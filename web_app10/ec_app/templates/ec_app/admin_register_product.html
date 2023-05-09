@@ -4,10 +4,10 @@
 <h1 class='fw-bold mt-5'>{{ msg }}</h1>
 {% endif %}
 <!-- 問 2-4-1 form の action 属性に、admin_register_product を指定しましょう。 -->
-<form action="" method="POST"  enctype="multipart/form-data">
+<form action="{% url 'admin_register_product' %}" method="POST"  enctype="multipart/form-data">
   {% csrf_token %}
   <!-- 問 2-4-2 form の中に form.as_p を追加しましょう。 -->
-
+  {{ form.as_p }}
   <button class="btn btn-primary">登録する</button>
   <!-- 問 3-2-1 登録するボタンの下に、一覧画面へのリンクを追加しましょう。 -->
   <a class='btn btn-primary' href="">一覧画面へ</a>

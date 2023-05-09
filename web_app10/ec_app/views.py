@@ -5,6 +5,7 @@ from django.http import JsonResponse ,HttpResponse
 from django.contrib.auth.views import LogoutView
 import datetime
 # 問 2-5-3-1 RegisterForm を ec_app/forms.py からインポートしましょう。
+from ec_app.forms import RegisterForm
 # 問 4-5-4 ec_app/forms.py から SearchProductForm をインポートしましょう。
 
 # 問 4-5-3-6 Q オブジェクトを django.db.models からインポートしましょう。
@@ -13,22 +14,11 @@ import datetime
 # ホーム
 def home(request):
     # 問 1-15-1-1 ログインユーザーの status を status 変数に格納しましょう。
-<<<<<<< HEAD
-<<<<<<< HEAD
-    status = request.status
+    params={
+        'status':request.user.status
+        }
     # 問 1-15-1-2 render メソッドの第三引数で、キー：status、バリュー：status として渡しましょう。
-    return render(request,'ec_app/home.html',status='status')
-=======
-=======
->>>>>>> 9873cb210f669ff508d6663d34ad743cc65e8df6
-    status = request.user.status
-
-    # 問 1-15-1-2 render メソッドの第三引数で、キー：status、バリュー：status として渡しましょう。
-    return render(request,'ec_app/home.html',status=status)
-<<<<<<< HEAD
->>>>>>> philo
-=======
->>>>>>> 9873cb210f669ff508d6663d34ad743cc65e8df6
+    return render(request,'ec_app/home.html',params)
 
 # ログアウト
 class Logout(LogoutView):
@@ -162,34 +152,35 @@ def change_qty(request):
 # 管理者ステータスのユーザーが利用できる商品登録
 def admin_register_product(request):
     # 問 2-5-1 admin_register_product の pass を削除しましょう。
-    pass
+    
     # 問 2-5-2 params 変数に空の辞書を定義しましょう。
-
+    params = {}
     # 問 2-5-3 POST の時の条件式を追加しましょう。
-
+    if request.method == 'POST':
         # 問 2-5-3-1 form 変数に RegisterForm を格納しましょう。また、RegisterForm には request.POST と request.FILES をカンマ区切りで指定しましょう。
-
+        form = RegisterForm(request.POST,request.FILES)
         # 問 2-5-3-2 form.is_valid の時の条件式を追加しましょう。
-
+        if form.is_valid():
             # 問 2-5-3-3 True:True の時は、post 変数に form.save() を格納しましょう。また、引数には commit=False を指定しましょう。
-
+            post = form.save(commit=False)
             # 問 2-5-3-4 True:post.user にログインユーザーを格納しましょう。
-
+            post.user = request.user
             # 問 2-5-3-5 True:post をセーブしましょう。
-
+            post.save()
             # 問 2-5-3-6 True:params 変数にキー：msg、バリュー：f'{post.product_name}の登録に成功しました。' を格納しましょう。
+            params['msg'] = f'{post.product_name}の登録に成功しました。'
 
-
+        else:
             # 問 2-5-3-7 False:False の時は、params 変数にキー：msg、バリュー：商品の登録に失敗しました。 を格納しましょう。
-
+            params['msg'] = '商品の登録に失敗しました。'
             # 問 2-5-3-8 False:params 変数にキー：form、バリュー：form を格納しましょう。
-
+            params['form'] = form
             # 問 2-5-3-9 False:render メソッドで admin_register_product.html を表示させましょう。また、params 辞書を HTML へ渡しましょう。
-
+            return render(request,'ec_app/admin_register_product.html',params)
     # 問 2-5-4 params にキー：form、バリュー：RegisterForm を追加しましょう。
-
+    params['form'] = RegisterForm()
     # 問 2-5-5 render メソッドで admin_register_product.html を表示させましょう。また、params 辞書を HTML へ渡しましょう。
-
+    return render(request,'ec_app/admin_register_product.html',params)
 
 # 管理者ステータスのユーザーが利用できる商品一覧、削除、編集
 def admin_product_list(request):
