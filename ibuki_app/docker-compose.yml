@@ -12,6 +12,10 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
   # Djangoアプリ
   web:
     # 指定したディレクトリ内のdockerfileからコンテナを作成する。ファイル名の指定がない場合はdockerfileを選択
@@ -27,3 +31,8 @@ services:
     # データベースの依存関係を指定(webコンテナをdbコンテナと接続する)
     depends_on:
       - db
+
+
+# service外で、ホストとコンテナのvolumeをバインドさせる
+volumes:
+  postgres_data:

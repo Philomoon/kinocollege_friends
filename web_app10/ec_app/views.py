@@ -185,12 +185,11 @@ def admin_register_product(request):
 # 管理者ステータスのユーザーが利用できる商品一覧、削除、編集
 def admin_product_list(request):
     # 問 3-3-1 admin_product_list 関数の pass を削除して、params 変数に空の辞書を定義しましょう。
-    pass
-
     # 問 3-5-1 admin_product_list 関数の params 変数定義の下に、POST の際の条件式を追加しましょう。
-
+    params= {}
+    if request.method == 'POST':
         # 問 3-5-2 request.POST の中に btn_delete が含まれている時の条件式を追加しましょう。
-
+        if btn_delete in request.POST:
             # 問 3-5-3 id 変数に request.POST.get('btn_delete') を格納しましょう。
 
             # 問 3-5-4 product 変数に Product テーブルから id 変数を利用して、選択されたレコードを get で取得しましょう。
@@ -219,9 +218,9 @@ def admin_product_list(request):
                 # 問 3-5-14 else:params にキー：msg、バリュー：f'ID:{id}の変更に成功しました。' として格納しましょう。
 
     # 問 3-3-2 products 変数に Product テーブルのデータを格納しましょう。user がログインユーザーのもので絞りましょう。
-
+    products = Product(user=request.user)
     # 問 3-3-3 products 変数を id の順番に並べ替えましょう。
-
+    products.order_by(id)
     # 問 3-3-5 admin_product_list 関数に戻り、products 変数に get_dict 関数の戻り値を格納しましょう。引数には products を渡しましょう。
 
     # 問 3-3-6 params にキー：products、バリュー：products を格納しましょう。
@@ -262,17 +261,18 @@ def search_product(request):
 
 # 辞書型を取得する関数
 # 問 3-3-4 admin_product_list の外に、get_dict 関数を作成しましょう。引数には queryset を指定しましょう。
+def get_dict(queryset):
 
     # 問 3-3-4-1 products 変数に list(queryset.valuse()) を格納しましょう。
-
+    products = list(queryset.values())
     # 問 3-3-4-2 choices 変数に Product.PRODUCT_CATEGORY を格納しましょう。
-
+    choices = Product.PRODUCT_CATEGORY
     # 問 3-3-4-3 choices 変数に dict((x, y) for x, y in choices) を再代入しましょう。
-
+    choices = dict((x,y) for x,y in choices)
     # 問 3-3-4-4 for 文を追加して、products 変数を回しましょう。
-
+    for index, product in enumerate(products):
         # 問 3-3-4-5 カテゴリーをキー：category、バリュー：それぞれの値を choices から取得して product に格納しましょう。
-
+        product['category'] = 
         # 問 3-3-4-6 画像の url を取得して、キー：img として格納しましょう。
-
+        product['img'] = queryset[index].img
     # 問 3-3-4-7 for 文の外で products 変数を return しましょう。
