@@ -5,41 +5,10 @@
 {%block content%}
     <h1>クライアント登録フォーム</h1>
 
-    <form action="/submit" method="POST">
-        <label for="name">名前:</label>
-        <input type="text" id="name" name="name" required>
-        <br>
-        
-        <label for="furigana">ふりがな:</label>
-        <input type="text" id="furigana" name="furigana" required>
-        <br>
-
-        <label for="gender">性別:</label>
-        <select id="gender" name="gender" required>
-            <option value="">選択してください</option>
-            <option value="male">男性</option>
-            <option value="female">女性</option>
-            <option value="other">その他</option>
-        </select>
-        <br>
-
-        <label for="phone">電話番号:</label>
-        <input type="tel" id="phone" name="phone" required>
-        <br>
-
-        <label for="insurance">保険者:</label>
-        <input type="text" id="insurance" name="insurance" required>
-        <br>
-
-        <label for="room_number">部屋番号:</label>
-        <input type="text" id="room_number" name="room_number" required>
-        <br>
-
-        <button type="submit" class="button">登録</button>
-        <br>
-        <br>
-        
+    <form method = "POST" class="post-form">
+        {% csrf_token %}
+        {{ form.as_p}}
+        <button type="submit" class="save btn btn-default">登録</button>
     </form>
-{%endblock%}
 
-    
+{%endblock%}

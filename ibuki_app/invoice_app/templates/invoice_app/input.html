@@ -4,38 +4,9 @@
 {%block content %}
     <!-- 実績入力画面 -->
     <h1>実績登録画面</h1>
-    <form action="" method="post"name="result">
-        <div class="form">
-            <!-- 利用者名 -->
-            利用者名：<input type="text" name="client_name" class="input">
-            <br>
-            <!-- 日付 -->
-            日付：<input type="text" name="date" class="input">
-            <br>
-            <!-- START -->
-            START:<input type="text" name="start_time" class="input-time">
-            <!-- END -->
-            END:<input type="text" name="end_time" class="input-time">
-            <br><br>
-            <!-- 入浴 -->
-            入浴：<input type="radio" name="bath" value="有" checked class="input-radio">有
-            <input type="radio" name="bath" value="無" class="input-radio" >無
-            <br>
-            <!-- 送迎 -->
-            送迎：<input type="radio" name="pick-up" value="有" checked class="input-radio">有
-            <input type="radio" name="pick-up" value="無" class="input-radio" >無
-            <br>
-            <!-- 食事 -->
-            食事：<input type="radio" name="lunch" value="有" checked class="input-radio">有
-            <input type="radio" name="lunch" value="無"  class="input-radio">無
-            <br>
-            <br>
-            <!-- 備考 -->
-            備考：<input type="text" name="remark" class="input-radio">
-            <br>
-            <br>
-            <!-- 登録ボタン -->
-            <input type="submit" value="登録する" class="input">
-        </div>
+    <form method = "POST" class="post-form">
+        {% csrf_token %}
+        {{ form.as_p}}
+        <button type="submit" class="save btn btn-default">登録</button>
     </form>
 {%endblock%}
