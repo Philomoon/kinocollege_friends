@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'bootstrap_datepicker_plus.widgets',
+    'bootstrap4',
     'invoice_app',
 ]
 
@@ -63,9 +65,17 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            # bootstrap4利用のため追加
+            'builtins':[ 
+                'bootstrap4.templatetags.bootstrap4',
+            ],
         },
     },
 ]
+
+BOOTSTRAP4 = {
+    'include_jquery':True,
+}
 
 WSGI_APPLICATION = 'app_pj.wsgi.application'
 

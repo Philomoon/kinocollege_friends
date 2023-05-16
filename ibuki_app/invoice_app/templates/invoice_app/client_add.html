@@ -1,4 +1,8 @@
 {% extends 'invoice_app/base.html' %}
+{%load bootstrap4%}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{%load static%}
 
 {% block title %} クライアント登録ホーム{%endblock%}
 
@@ -7,8 +11,8 @@
 
     <form method = "POST" class="post-form">
         {% csrf_token %}
-        {{ form.as_p}}
-        <button type="submit" class="save btn btn-default">登録</button>
+        {% bootstrap_form form %}
+        <button type="submit" class="save btn btn-primary">登録</button>
     </form>
 
 {%endblock%}

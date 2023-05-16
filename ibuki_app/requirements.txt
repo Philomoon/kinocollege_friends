@@ -1,7 +1,7 @@
 Django
 psycopg2
 # djangoでbootstrapを利用するためのinstall文
-django-bootstrap4
+bootstrap4
 django-bootstrap-datepicker-plus
 # 問 1-9 画像を処理するためのinstall文
 Pillow

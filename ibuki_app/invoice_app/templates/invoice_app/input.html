@@ -1,4 +1,11 @@
 {% extends 'invoice_app/base.html' %}
+
+
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{%load static%}
+
 {% block title %}実績入力{%endblock%}
 
 {%block content %}
@@ -6,7 +13,26 @@
     <h1>実績登録画面</h1>
     <form method = "POST" class="post-form">
         {% csrf_token %}
-        {{ form.as_p}}
-        <button type="submit" class="save btn btn-default">登録</button>
+
+        {% bootstrap_field form.user_name%}
+        {% bootstrap_field form.date %}
+        
+        <div class="input-daterange input-group">
+            <div class="input-group-prepend">
+                {% bootstrap_field form.start_time %}
+            </div>
+            <p>&nbsp;</p>
+            <div class="input-group-append">
+                {% bootstrap_field form.end_time %}
+            </div>
+        </div>
+        
+        {% bootstrap_field form.bathing %}
+        {% bootstrap_field form.transportation %}
+        {% bootstrap_field form.meal %}
+        {% bootstrap_field form.notes %}
+
+        <button type="submit" class="save btn btn-primary">登録</button>
     </form>
+
 {%endblock%}

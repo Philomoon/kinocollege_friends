@@ -18,3 +18,5 @@ RUN pip install -r requirements.txt
 
 # プロジェクトを追加する
 ADD . /code/
+
+RUN pip3 install django-bootstrap5
