@@ -1,4 +1,6 @@
 from django.shortcuts import render,redirect
+from django.views.generic.edit import UpdateView
+from django.urls import reverse_lazy
 from .models import Client
 from .forms import ClientForm,ActualForm
 
@@ -25,15 +27,33 @@ def client_add(request):
     return render(request, 'invoice_app/client_add.html',params)
 
 def client_list(request):
-    clients = Client.objects.all()
+    clients = Client.objects.all().order_by('client_kana')
     params = {
         'clients':clients,
     }
     return render(request,'invoice_app/client_list.html',params)
 
-def input(request):
+class Client_modify(UpdateView):
+    model = Client
+    fields = ['client_name','client_kana','client_gender','number','insurer','room_number']
+    template_name_suffix = '_modify_form' 
 
-    form = ActualForm()
+    success_url = reverse_lazy('client_list')
+
+def Client_delete(request,client_id):
+    if client_id:
+        client_delete = Client.objects.get(id=client_id)
+        client_delete.delete()
+    return redirect('client_list')
+
+def input(request):
+    if request.method == 'POST':
+        form = ActualForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('input')
+    else:
+        form = ActualForm()
     params = {
         'form':form,
     }

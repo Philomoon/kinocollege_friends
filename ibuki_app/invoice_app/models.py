@@ -1,5 +1,5 @@
 from django.db import models
-
+import datetime
 # Create your models here.
 class Client (models.Model):
     GENDER_CHOICES = (
@@ -18,7 +18,7 @@ class Client (models.Model):
     # 保険者
     insurer = models.CharField('保険者',max_length=10)
     # 部屋番号
-    room_number = models.CharField('部屋番号',max_length=10,null=True)
+    room_number = models.CharField('部屋番号',max_length=10,null=True,blank=True)
 
     def __str__(self):
         return self.client_name
@@ -30,9 +30,9 @@ class Actual(models.Model):
     # 日付
     date = models.DateField('日付')
     # 開始時刻
-    start_time = models.TimeField('開始時刻')
+    start_time = models.TimeField('開始時刻',default=datetime.time(10,0))
     # 終了時刻
-    end_time = models.TimeField('終了時刻')
+    end_time = models.TimeField('終了時刻',default=datetime.time(15,0))
     # 入浴
     bathing = models.BooleanField('入浴',default=True)
     # 送迎
@@ -41,3 +41,6 @@ class Actual(models.Model):
     meal = models.BooleanField('食事',default=True)
     # 備考
     notes = models.TextField('備考',blank=True)
+
+    class Meta:
+        unique_together = ['user_name','date']

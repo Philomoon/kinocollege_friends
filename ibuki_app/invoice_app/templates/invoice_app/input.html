@@ -21,8 +21,7 @@
             <div class="input-group-prepend">
                 {% bootstrap_field form.start_time %}
             </div>
-            <p>&nbsp;</p>
-            <div class="input-group-append">
+            <div class="input-group-append" style="margin-left: 20px;">
                 {% bootstrap_field form.end_time %}
             </div>
         </div>
@@ -32,7 +31,7 @@
         {% bootstrap_field form.meal %}
         {% bootstrap_field form.notes %}
 
-        <button type="submit" class="save btn btn-primary">登録</button>
+        <button type="submit" class="save btn btn-primary" style="margin-top: 20px; margin-bottom: 20px;">登録</button>
     </form>
 
 {%endblock%}

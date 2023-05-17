@@ -1,0 +1,8 @@
+{% extends 'invoice_app/base.html' %} {% block title %}削除画面{% endblock %}
+{%block content %}
+<h1>削除されました</h1>
+<form method="post">
+    {% csrf_token %} 
+    
+</form>
+{% endblock %}

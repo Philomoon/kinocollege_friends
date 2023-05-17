@@ -1,8 +1,13 @@
 {% extends 'invoice_app/base.html' %}
 
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{%load static%}
+
 {% block content %}
 <h2>クライアント一覧</h2>
-<table>
+<table class="table table-bordered">
     <tr>
     <th>名前</th>
     <th>ふりがな</th>
@@ -19,6 +24,11 @@
     <td>{{ client.number }}</td>
     <td>{{ client.insurer }}</td>
     <td>{{ client.room_number }}</td>
+
+    <td>
+        <a href="{%url 'client_modify' client.id %}" class="btn btn-primary">修正</a> <!-- 修正ボタン -->
+        <a href="{%url 'client_delete' client.id %}" class="btn btn-primary">削除</a> <!-- 削除ボタン -->
+    </td>
 </tr>
     {% empty %}
 <tr>
