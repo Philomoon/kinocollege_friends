@@ -65,8 +65,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            # bootstrap4利用のため追加
-            'builtins':[ 
+            'builtins': [
                 'bootstrap4.templatetags.bootstrap4',
             ],
         },

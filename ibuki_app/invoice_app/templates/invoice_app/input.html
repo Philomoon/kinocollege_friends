@@ -9,8 +9,9 @@
 {% block title %}実績入力{%endblock%}
 
 {%block content %}
-    <!-- 実績入力画面 -->
-    <h1>実績登録画面</h1>
+<!-- 実績入力画面 -->
+{{ form.media }} 
+<h1>実績登録画面</h1>
     <form method = "POST" class="post-form">
         {% csrf_token %}
 

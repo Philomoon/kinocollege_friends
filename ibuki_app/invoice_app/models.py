@@ -44,3 +44,7 @@ class Actual(models.Model):
 
     class Meta:
         unique_together = ['user_name','date']
+
+class ServiceType(models.Model):
+    name = models.CharField(max_length=100)
+    base_price = models.DecimalField(max_digits=6,decimal_places=0)

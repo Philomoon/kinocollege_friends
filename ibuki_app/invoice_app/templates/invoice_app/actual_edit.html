@@ -1,0 +1,20 @@
+
+{% extends 'invoice_app/base.html' %}
+
+{% block title %}メイン画面{% endblock%}
+
+{%block content %}
+
+<!-- actual_edit.html -->
+
+<body>
+    <h1>Edit Actual</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">保存</button>
+    </form>
+</body>
+
+
+{%endblock%}

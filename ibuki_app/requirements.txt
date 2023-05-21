@@ -1,10 +1,10 @@
 Django
 psycopg2
-# djangoでbootstrapを利用するためのinstall文
-bootstrap4
+
+django-bootstrap4
 django-bootstrap-datepicker-plus
 django-phonenumber-field
-# 問 1-9 画像を処理するためのinstall文
+
 Pillow
-# 問 4-4-2-2 今回はあらかじめ、requirements.txt に記述してあります。確認しましょう。
+
 django-mathfilters

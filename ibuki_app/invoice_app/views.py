@@ -1,7 +1,8 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.views.generic.edit import UpdateView
+from django.forms import modelformset_factory
 from django.urls import reverse_lazy
-from .models import Client
+from .models import Client,Actual
 from .forms import ClientForm,ActualForm
 
 # サーバーからクライアントに返されるHTTPレスポンスを表すクラス
@@ -58,3 +59,59 @@ def input(request):
         'form':form,
     }
     return render(request,'invoice_app/input.html',params)
+
+
+def actual_list(request):
+    actuals = Actual.objects.all().order_by('date')
+    params = {
+        'actuals':actuals,
+    }
+    return render(request,'invoice_app/actual_list.html',params)
+
+def actual_edit(request, actual_id):
+    actual = get_object_or_404(Actual, id=actual_id)  # 指定されたIDのActualデータを取得
+    if request.method == 'POST':
+        form = ActualForm(request.POST, instance=actual)
+        if form.is_valid():
+            form.save()  # フォームの内容を保存
+            return redirect('actual_list')  # 一覧ページにリダイレクト
+    else:
+        form = ActualForm(instance=actual)
+    return render(request, 'invoice_app/actual_edit.html', {'form': form, 'actual': actual})
+
+def actual_edit_ajax(request):
+    id = request.POST.get('id')
+    name = request.POST.get('name')
+    value = request.POST.get('value')
+
+    actual = get_object_or_404(Actual, id=id)  # 指定されたIDのActualデータを取得
+
+    if request.method == 'POST':
+        form = ActualForm(request.POST, instance=actual)
+        if form.is_valid():
+            form.save()  # フォームの内容を保存
+            return redirect('actual_list')  # 一覧ページにリダイレクト
+
+def actual_delete(request,actual_id):
+    if actual_id:
+        actual_delete = Actual.objects.get(id=actual_id)
+        actual_delete.delete()
+    return redirect('actual_list')
+
+def actual_bulk_edit(request):
+    queryset = Actual.objects.all()
+
+    ActualFormSet = modelformset_factory(Actual, form=ActualForm, extra=0)
+    formset = ActualFormSet(request.POST or None, queryset = queryset)
+
+    if request.method == 'POST':
+        if formset.is_valid():
+            formset.save()
+            return redirect('actual_list')
+    
+    params = {
+        'actuals':formset,
+        'msg':"更新しました",
+    }
+    return render(request,'invoice_app/actual_list.html',params)
+
