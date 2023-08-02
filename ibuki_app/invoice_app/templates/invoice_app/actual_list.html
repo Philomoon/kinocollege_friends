@@ -6,53 +6,74 @@
 {%load static%}
 
 {% block content %}
-<div style="display: flex;margin: 20px;" class="list-title">
-    <h2>実績一覧</h2>
-    <a href="{% url 'actual_bulk_edit'%}" class="btn btn-primary" style="margin-left: 50px;">一括修正</a> <!-- 一括修正ボタン -->
-    <h4>{{msg}}</h4>
+<div class="col-md-3">
+    <div style="display: flex;margin: 20px;" class="list-title">
+        <h2>実績一覧</h2>
+        <h3><a href="{% url 'actual_bulk_edit'%}" class="btn btn-primary" style="margin-left: 50px;">一括修正</a> <!-- 一括修正ボタン --></h3>
+    </div>
+    <div class="d-flex align-items-end">
+        <form method="GET" class="d-flex">
+            <label for="month">月を選択:</label>
+            <input type="month" id="month" name="month" class="ml-2">
+            <input type="submit" value="表示" class="ml-2">
+        </form>
+    </div>
 </div>
 
-<table class="table table-bordered">
-    <tr>
-    <th>利用者名</th>
-    <th>日付</th>
-    <th>開始時刻</th>
-    <th>終了時刻</th>
-    <th>入浴</th>
-    <th>送迎</th>
-    <th>食事</th>
-    <th>備考</th>
-</tr>
-    {% for actual in actuals %}
-<tr>
-    <td>{{actual.user_name}}</td>
-    <td>{{ actual.date }}</td>
-    <td><input type="time" name="start_time_{{ actual.id}}" value="{{actual.start_time}}"></td>
-    <td><input type="time" name="end_time_{{ actual.id}}" value="{{actual.end_time}}"></td>
-    <td><input type="checkbox" name="bathing_{{ actual.id}}" {% if actual.bathing %}checked{% endif %}></td>
-    <td><input type="checkbox" name="transportation_{{ actual.id}}" {% if actual.transportation %}checked{% endif %}></td>
-    <td><input type="checkbox" name="meal_{{ actual.id}}" {% if actual.meal %}checked{% endif %}></td>
-    <td><input type="text" name="notes" value="{{actual.notes}}"></td>
-    
 
-    <td>
-        <a href="{% url 'actual_edit' actual.id %}" class="btn btn-primary">修正</a> <!-- 修正ボタン -->
-        <a href="{% url 'actual_delete' actual.id %}" class="btn btn-danger">削除</a> <!-- 削除ボタン -->
-    </td>
-</tr>
-    {% empty %}
-<tr>
-    <td colspan="6">実績情報が存在しません。</td>
-</tr>
-    {% endfor %}
-</table>
+<div>
+
+    <table>
+        <tr>
+            <th>利用者名</th>
+            <th>日付</th>
+            <th>日中一時</th>
+            <th>タイプ</th>
+            <th>開始時刻</th>
+            <th>終了時刻</th>
+            <th>入浴</th>
+            <th>送迎</th>
+            <th>食事</th>
+            <th>備考</th>
+        </tr>
+{% for actual in actuals %}
+        <tr>
+            <td>{{actual.user_name}}</td>
+            <td>{{ actual.date }}</td>
+            <td><input type="checkbox" name="dt_s_{{ actual.id}}" {% if actual.dt_s %}checked{% endif %}></td>
+            <td>{{ actual.type.name }}</td>
+            <td><input type="time" name="start_time_{{ actual.id}}" value="{{actual.start_time}}"></td>
+            <td><input type="time" name="end_time_{{ actual.id}}" value="{{actual.end_time}}"></td>
+            
+            
+            <!-- <td><input type="checkbox" name="bathing_{{ actual.id}}" {% if actual.bathing %}checked{% endif %}></td>
+                <td><input type="checkbox" name="transportation_{{ actual.id}}" {% if actual.transportation %}checked{% endif %}></td>
+                <td><input type="checkbox" name="meal_{{ actual.id}}" {% if actual.meal %}checked{% endif %}></td> -->
+                
+                
+                
+                <td><input type="text" name="notes" value="{{actual.notes}}"></td>
+                
+                
+                <td>
+                    <a href="{% url 'actual_edit' actual.id %}" class="btn btn-primary">修正</a> <!-- 修正ボタン -->
+                    <a href="{% url 'actual_delete' actual.id %}" class="btn btn-danger">削除</a> <!-- 削除ボタン -->
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">実績情報が存在しません。</td>
+            </tr>
+            {% endfor %}
+    </table>
+</div>
 {% endblock %}
 
 <style>
     .list-title{
         margin: 20px;
     }
-</style>
+    </style>
 
 <!-- データ修正時に随時DB更新 -->
 <script>

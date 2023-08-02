@@ -1,8 +1,15 @@
 from bootstrap_datepicker_plus.widgets import DatePickerInput
 from django import forms
-from .models import Client,Actual
+from .models import Client,Actual,Insurer
+from django.forms import ModelChoiceField
 
 class ClientForm(forms.ModelForm):
+
+    insurer = forms.ModelChoiceField(
+        queryset=Insurer.objects.all(),
+        to_field_name="insurer_name",
+    )
+
     class Meta:
         model = Client
         fields = ['client_name','client_kana','client_gender','number','insurer','room_number']
@@ -22,11 +29,13 @@ class ClientForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['room_number'].required = False
+
+    
     
 class ActualForm(forms.ModelForm):
     class Meta:
         model = Actual
-        fields = ['user_name','date','start_time','end_time','bathing','transportation','meal','notes']
+        fields = ['user_name','date','start_time','end_time','dt_s','bathing','transportation','meal','notes']
         widgets = {
             'date': DatePickerInput(
                 attrs={'class':'datepicker'},
@@ -45,7 +54,14 @@ class ActualForm(forms.ModelForm):
                 attrs={'type':'time'},
             ),
 
-            # 'notes':forms.TextInput(
-                
-            # ),
+            'bathing': forms.CheckboxInput(),
+
+            'transportation': forms.CheckboxInput(),
+
+            'meal': forms.CheckboxInput(),
+
         }
+
+class InvoiceCreateForm(forms.Form):
+    customer = forms.ModelChoiceField(queryset=Client.objects.all())
+    month = forms.DateField()

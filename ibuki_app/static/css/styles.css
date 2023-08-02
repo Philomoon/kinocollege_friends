@@ -2,6 +2,9 @@ body {
     font-family: Arial, sans-serif;
     background-color: #e7f0e2;
     color: #3d5a2b;
+    margin: 0;
+    padding: 0;
+    align-items: center;
 }
 
 header {
@@ -34,10 +37,6 @@ h1 {
     text-align: center;
 }
 
-form {
-    width: 300px;
-    margin: 0 auto;
-}
 
 label {
     display: block;
@@ -46,8 +45,8 @@ label {
 
 input,
 select {
-    width: 100%;
-    padding: 5px;
+    width: 500;
+    padding: 10;
     margin-bottom: 15px;
 }
 

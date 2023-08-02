@@ -1,0 +1,24 @@
+{% extends 'invoice_app/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Create Invoice</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">Customer</label>
+            <select class="form-select" name="customer">
+                {% for client in form.fields.customer.queryset %}
+                    <option value="{{ client.id }}">{{ client.client_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Month</label>
+            <input type="month" class="form-control" name="month" value="{{ form.month.value|date:'Y-m' }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Invoice</button>
+
+    </form>
+</div>
+{% endblock %}

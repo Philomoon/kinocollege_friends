@@ -12,27 +12,44 @@
 <!-- 実績入力画面 -->
 {{ form.media }} 
 <h1>実績登録画面</h1>
-    <form method = "POST" class="post-form">
-        {% csrf_token %}
 
-        {% bootstrap_field form.user_name%}
-        {% bootstrap_field form.date %}
+<div class="d-flex justify-content-center">
+
+    
+    <form method = "POST" class="col-auto" style="max-width: 500px;">
+        {% csrf_token %}
         
+        {% bootstrap_field form.user_name%}
+        
+        {% bootstrap_field form.date %}
+        <br>
         <div class="input-daterange input-group">
-            <div class="input-group-prepend">
+            <div class="col-auto">
                 {% bootstrap_field form.start_time %}
             </div>
-            <div class="input-group-append" style="margin-left: 20px;">
+            <div class="col-auto" style="margin-left: 20px;">
                 {% bootstrap_field form.end_time %}
+            </div>
+            <div class="col-auto" style="margin: 35px;">
+                {% bootstrap_field form.dt_s %}
             </div>
         </div>
         
-        {% bootstrap_field form.bathing %}
-        {% bootstrap_field form.transportation %}
-        {% bootstrap_field form.meal %}
+        <div class="input-daterange input-group">
+            <div class="input-group-prepend">     
+                {% bootstrap_field form.bathing %}
+            </div>
+            <div class="input-group-append" style="margin-left: 20px;">
+                {% bootstrap_field form.transportation %}
+            </div>
+            <div class="input-group-append" style="margin-left: 20px;">
+                {% bootstrap_field form.meal %}
+            </div>
+        </div>
         {% bootstrap_field form.notes %}
-
+        
         <button type="submit" class="save btn btn-primary" style="margin-top: 20px; margin-bottom: 20px;">登録</button>
     </form>
-
+</div>
+    
 {%endblock%}

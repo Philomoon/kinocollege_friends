@@ -1,0 +1,27 @@
+{% extends 'invoice_app/base.html' %}
+
+
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{%load static%}
+
+{% block title %}実績入力{%endblock%}
+
+{%block content %}
+<!-- 実績入力画面 -->
+{{ form.media }} 
+<h1>実績登録画面</h1>
+<form method = "POST" class="col-auto" style="max-width: 500px;">
+    {% csrf_token %}
+
+    {% bootstrap_field form.user_name%}
+
+    <label for="month">月を選択:</label>
+    <input type="month" id="month" name="month" class="ml-2">
+    <input type="submit" value="表示" class="ml-2">
+
+    <button><a href="{%url 'test'%}">作成</a></button>
+</form>
+
+{%endblock%}

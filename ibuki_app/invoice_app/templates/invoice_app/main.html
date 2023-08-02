@@ -1,11 +1,24 @@
 
 {% extends 'invoice_app/base.html' %}
 {% load bootstrap4 %}
-
-{% block title %}メイン画面{% endblock%}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{%load static%}
 
 {%block content %}
+<!-- 実績入力画面 -->
+{{ form.media }} 
+<h3>作成する請求書を選択して下さい</h3>
+<form method = "POST" class="col-auto" style="max-width: 500px;">
+    {% csrf_token %}
 
-<h2>ここがメイン画面です</h2>
+    {% bootstrap_field form.user_name%}
+
+    <label for="month">月を選択:</label>
+    <input type="month" id="month" name="month" class="ml-2">
+
+
+    <button><a href="{%url 'test'%}">作成</a></button>
+</form>
 
 {%endblock%}

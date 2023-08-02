@@ -1,0 +1,100 @@
+{% extends 'invoice_app/base.html' %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{%load static%}
+
+{% block title %}test画面{% endblock%}
+
+
+{% block content %}
+<div class="container">
+<h1>Service Records</h1>
+<form class="form-inline mb-3" method="POST">
+    {% csrf_token %}
+    <select name="name" >
+        {%for client in clients_list%}
+        <option value="{{ client.id }}" {% if client.id == client_id %}selected{% endif %}>{{ client.client_name }}</option>
+        {%endfor%}
+    </select>
+
+    <input type="text" class="form-control" id="datepicker" name="ym" value="{{year}}-{{month}}">
+    <input type="hidden" id="year" name="year" value="{{year}}">
+    <input type="hidden" id="month" name="month" value="{{month}}">
+    
+    <button type="submit" class="btn btn-primary ml-2">View</button>
+</form>
+
+<!-- ↓を次のように変更するhref"% url 'invoice_create' %}?year={{ year }}&month={{ month }}" class="btn btn-primary mb-3">Create Invoice -->
+
+<a href="" class="btn btn-primary mb-3">Create Invoice</a>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>名前</th>
+        <th>利用日</th>
+        <th>開始時間</th>
+        <th>終了時間</th>
+        <th>サービス名</th>
+        <th>送迎</th>
+        <th>入浴</th>
+        <th>昼食</th>
+        <th>備考</th>
+
+        <th>加算</th>
+        <th>金額</th>
+        <!-- 他の列を追加 -->
+    </tr>
+    </thead>
+    <tbody>
+    {% for record in service_records %}
+
+    <tr>
+        <td>{{ record.user_name}}</td>
+        <td>{{ record.date }}</td>
+        <td>{{ record.start_time }}</td>
+        <td>{{ record.end_time }}</td>
+        <td>{{ record.type.name }}</td>
+        <td><input type="checkbox" {% if record.transportation %}checked{% endif %} disabled></td>
+        <td><input type="checkbox" {% if record.bathing %}checked{% endif %} disabled></td>
+        <td><input type="checkbox" {% if record.meal %}checked{% endif %} disabled></td>
+        <td>{{ record.notes }}</td>
+        <td>
+            {% for addon in record.addons.all %}
+            {{ addon.name }}
+            {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </td>
+        <td>{{ record.total_amount }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4">No records found.</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+
+<script>
+    $(function () {
+            $('#datepicker').datepicker({
+                format: "yyyy-mm", // mm-yyyy 形式に設定
+                viewMode: "months", // 最初の表示を月ビューに設定
+                minViewMode: "months" // ユーザーが選択できる最小単位を月に設定
+            });
+
+            // Getting selected date
+            $('#datepicker').on('change', function() {
+                let selectedDate = $(this).val();
+                let [year,month] = selectedDate.split('-');
+                // Now you have the month and year. You can use it as per your requirement.
+                $('#year').val(year);
+                $('#month').val(month);
+                $('#ym').val(this)
+            });
+        });
+
+</script>
+{% endblock%}

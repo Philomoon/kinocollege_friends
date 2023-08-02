@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Invoices for the month</h2>
+    <table>
+        <tr>
+            <th>Customer</th>
+            <th>Date</th>
+            <th>Total</th>
+        </tr>
+        {% for invoice in invoices %}
+            <tr>
+                <td>{{ invoice.customer.name }}</td>
+                <td>{{ invoice.created_at }}</td>
+                <td>{{ invoice.items.aggregate(total=Sum('product__price')) }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

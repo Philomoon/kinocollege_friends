@@ -7,12 +7,20 @@
 {% block title %} クライアント登録ホーム{%endblock%}
 
 {%block content%}
-    <h1>クライアント登録フォーム</h1>
 
-    <form method = "POST" class="post-form">
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        <button type="submit" class="save btn btn-primary">登録</button>
-    </form>
+<h1>クライアント登録フォーム</h1>
 
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 mx-auto">
+            
+            <form method = "POST" class="post-form">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <button type="submit" class="save btn btn-primary">登録</button>
+            </form>
+            
+        </div>
+    </div>
+</div>
 {%endblock%}
