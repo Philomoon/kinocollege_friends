@@ -30,10 +30,13 @@
 
     <!-- ↓を次のように変更するhref"% url 'invoice_create' %}?year={{ year }}&month={{ month }}" class="btn btn-primary mb-3">Create Invoice -->
 
-<form action="{% url 'actual_bulk_edit' %}" method="post" class="table">
-    
-    {% csrf_token %}
-        <table>
+</div>
+
+<div>
+    <form action="{% url 'actual_bulk_edit' %}" method="post" class="table">
+        
+        {% csrf_token %}
+        <table class="table table-bordered table-hover m-3">
             <thead>
                 <tr>
                     <th>名前</th>
@@ -55,23 +58,23 @@
                 {% for record in service_records %}
                 
                 <tr>
-                    <td>{{ record.user_name}}</td>
-                    <td>{{ record.date }}</td>
-                    <td><input type="time" name="start_time-{{record.id}}" value="{{ record.start_time }}"></td>
-                    <td><input type="time" name="end_time-{{record.id}}" value="{{ record.end_time }}"></td>
-                    <td><input type="checkbox" name="dt_s-{{record.id}}" {% if record.dt_s %}checked{% endif%}></td>
-                    <td>{{ record.type.name }}</td>
-                    <td><input type="checkbox" name="transportation-{{record.id}}" {% if record.transportation %}checked{% endif %}></td>
-                    <td><input type="checkbox" name="bathing-{{record.id}}" {% if record.bathing %}checked{% endif %}></td>
-                    <td><input type="checkbox" name="meal-{{record.id}}" {% if record.meal %}checked{% endif %} ></td>
-                    <td><input type="text" name="notes-{{record.id}}" value="{{record.notes }}"></td>
-                    <td>
+                    <td class="col-1">{{ record.user_name}}</td>
+                    <td class="col-1">{{ record.date }}</td>
+                    <td><input class="col-12" type="time" name="start_time-{{record.id}}" value="{{ record.start_time }}"></td>
+                    <td><input class="col-12" type="time" name="end_time-{{record.id}}" value="{{ record.end_time }}"></td>
+                    <td><input class="col-12" type="checkbox" name="dt_s-{{record.id}}" {% if record.dt_s %}checked{% endif%}></td>
+                    <td class="col-1">{{ record.type.name }}</td>
+                    <td><input class="col-12" type="checkbox" name="transportation-{{record.id}}" {% if record.transportation %}checked{% endif %}></td>
+                    <td><input class="col-12" type="checkbox" name="bathing-{{record.id}}" {% if record.bathing %}checked{% endif %}></td>
+                    <td><input class="col-12" type="checkbox" name="meal-{{record.id}}" {% if record.meal %}checked{% endif %} ></td>
+                    <td><input class="col-12" type="text" name="notes-{{record.id}}" value="{{record.notes }}"></td>
+                    <td class="col-1">
                         {% for addon in record.addons.all %}
                         {{ addon.name }}
                         {% if not forloop.last %}, {% endif %}
                         {% endfor %}
                     </td>
-                    <td>{{ record.total_amount }}</td>
+                    <td class="col-1">{{ record.total_amount }}</td>
                 </tr>
                 {% empty %}
                 <tr>
@@ -80,28 +83,28 @@
                 {% endfor %}
             </tbody>
         </table>
-    <button type="submit">一括修正</button>
-</form>
+        <button type="submit">一括修正</button>
+    </form>
 </div>
 
 <script>
-    $(function () {
-        $('#datepicker').datepicker({
-                format: "yyyy-mm", // mm-yyyy 形式に設定
-                viewMode: "months", // 最初の表示を月ビューに設定
-                minViewMode: "months" // ユーザーが選択できる最小単位を月に設定
-            });
-
-            // Getting selected date
-            $('#datepicker').on('change', function() {
-                let selectedDate = $(this).val();
-                let [year,month] = selectedDate.split('-');
-                // Now you have the month and year. You can use it as per your requirement.
-                $('#year').val(year);
-                $('#month').val(month);
-                $('#ym').val(selectedDate)
-            });
+$(function () {
+    $('#datepicker').datepicker({
+            format: "yyyy-mm", // mm-yyyy 形式に設定
+            viewMode: "months", // 最初の表示を月ビューに設定
+            minViewMode: "months" // ユーザーが選択できる最小単位を月に設定
         });
+
+        // Getting selected date
+        $('#datepicker').on('change', function() {
+            let selectedDate = $(this).val();
+            let [year,month] = selectedDate.split('-');
+            // Now you have the month and year. You can use it as per your requirement.
+            $('#year').val(year);
+            $('#month').val(month);
+            $('#ym').val(selectedDate)
+        });
+    });
 
 </script>
 {% endblock%}

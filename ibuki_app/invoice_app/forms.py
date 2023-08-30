@@ -1,13 +1,17 @@
 from bootstrap_datepicker_plus.widgets import DatePickerInput
 from django import forms
+from django.db.models.base import Model
 from .models import Client,Actual,Insurer
 from django.forms import ModelChoiceField
+
+class InsurerChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.insurer_name
 
 class ClientForm(forms.ModelForm):
 
     insurer = forms.ModelChoiceField(
         queryset=Insurer.objects.all(),
-        to_field_name="insurer_name",
     )
 
     class Meta:

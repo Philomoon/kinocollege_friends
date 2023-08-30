@@ -6,7 +6,10 @@ from datetime import datetime as dt
 import datetime as dt_module
 
 class Insurer(models.Model):
-    insurer_name = models.CharField('保険者',max_length=6)
+    insurer_name = models.CharField('保険者',max_length=6,default=1)
+    
+    def __str__(self) -> str:
+        return self.insurer_name
 
 class Client (models.Model):
     GENDER_CHOICES = (
@@ -23,7 +26,7 @@ class Client (models.Model):
     # 電話番号
     number = models.CharField('電話番号',max_length=15)
     # 保険者
-    insurer = models.ForeignKey(Insurer,verbose_name='保険者',on_delete=models.CASCADE)
+    insurer = models.ForeignKey(Insurer,on_delete=models.CASCADE)
 
     # 部屋番号
     room_number = models.CharField('部屋番号',max_length=10,null=True,blank=True)
@@ -34,6 +37,7 @@ class Client (models.Model):
 
 class ServiceType(models.Model):
     name = models.CharField(max_length=100)
+    insurer = models.ForeignKey(Insurer,on_delete=models.CASCADE,default=1)
     base_price = models.DecimalField(max_digits=6,decimal_places=0)
 
 class AddonType(models.Model):
@@ -82,11 +86,11 @@ class Actual(models.Model):
         # Overriding the save method to determine the service type based on duration
         if self.dt_s == True:
             if self.duration <= 3:  # For instance, this could be your criterion for short duration
-                self.type = ServiceType.objects.get(name='Short')
+                self.type = ServiceType.objects.get(name='日中一時支援(~4)')
             elif self.duration <= 6:
-                self.type = ServiceType.objects.get(name='Medium')
+                self.type = ServiceType.objects.get(name='日中一時支援(4~8)')
             else:
-                self.type = ServiceType.objects.get(name='Long')
+                self.type = ServiceType.objects.get(name='日中一時支援(8~)')
         else:
             self.type = ServiceType.objects.get(name='生活介護')
 
