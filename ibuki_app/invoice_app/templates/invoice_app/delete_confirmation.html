@@ -1,0 +1,13 @@
+{% extends "invoice_app/base.html" %}
+
+{%block title %} 確認画面 {%endblock%}
+
+{% block content %}
+    <h2>利用者の削除確認</h2>
+    <p> name を本当に削除してよろしいですか？</p>
+    <form method="post">
+        {% csrf_token %}
+        <input type="submit" value="削除">
+        <a href="{% url 'client_list' %}">キャンセル</a>
+    </form>
+{% endblock %}

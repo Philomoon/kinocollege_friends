@@ -16,30 +16,23 @@ class ClientForm(forms.ModelForm):
 
     class Meta:
         model = Client
-        fields = ['client_name','client_kana','client_gender','number','insurer','room_number']
+        fields = ['client_name','client_kana','client_gender','class_obst','class_num','insurer']
         widgets = {
             'client_kana':forms.TextInput(
                 attrs={'pattern':"(?=.*?[\u3041-\u309F])[\u3041-\u309F\s]*",
                         'placeholder':'ひらがなを入力してください。',
                     },
             ),
-            'number':forms.TextInput(
-                attrs={'pattern':"\d{2,4}-?\d{2,4}-?\d{3,4}",
-                        'placeholder':'半角数字、-(ハイフン)のみ',
-                    },
-            ),
+            
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['room_number'].required = False
 
     
     
 class ActualForm(forms.ModelForm):
     class Meta:
         model = Actual
-        fields = ['user_name','date','start_time','end_time','dt_s','bathing','transportation','meal','notes']
+        fields = ['user_name','date','start_time','end_time','ds','transportation1','transportation2','meal','notes']
         widgets = {
             'date': DatePickerInput(
                 attrs={'class':'datepicker'},
@@ -58,9 +51,9 @@ class ActualForm(forms.ModelForm):
                 attrs={'type':'time'},
             ),
 
-            'bathing': forms.CheckboxInput(),
+            'transportation1': forms.CheckboxInput(),
 
-            'transportation': forms.CheckboxInput(),
+            'transportation2': forms.CheckboxInput(),
 
             'meal': forms.CheckboxInput(),
 

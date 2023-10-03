@@ -13,9 +13,9 @@
     <div>
         <form class="row" method="POST">
             {% csrf_token %}
-            <select name="name" >
+            <select name="name">
                 {%for client in clients_list%}
-                <option value="{{ client.id }}" {% if client.id == client_id %}selected{% endif %}>{{ client.client_name }}</option>
+                <option value="{{ client.id }}" {% if client.id|stringformat:"s" == client_id %}selected{% endif %}>{{ client.client_name }}</option>
                 {%endfor%}
             </select>
             
@@ -39,8 +39,8 @@
                 <th>開始時間</th>
                 <th>終了時間</th>
                 <th>サービス名</th>
-                <th>送迎</th>
-                <th>入浴</th>
+                <th>送迎（迎え）</th>
+                <th>送迎（送り）</th>
                 <th>昼食</th>
                 <th>備考</th>
                 <th>加算</th>
@@ -55,9 +55,9 @@
                 <td class="col-1">{{ record.date }}</td>
                 <td >{{ record.start_time }}</td>ß
                 <td >{{ record.end_time }}</td>
-                <td class="col-1">{{ record.type.name }}</td>
-                <td ><input class="col-12" type="checkbox" {% if record.transportation %}checked{% endif %} disabled></td>
-                <td><input class="col-12" type="checkbox" {% if record.bathing %}checked{% endif %} disabled></td>
+                <td class="col-1">{{ record.type.get_servicename_display }}</td>
+                <td ><input class="col-12" type="checkbox" {% if record.transportation1 %}checked{% endif %} disabled></td>
+                <td><input class="col-12" type="checkbox" {% if record.transportation2 %}checked{% endif %} disabled></td>
                 <td><input class="col-12" type="checkbox" {% if record.meal %}checked{% endif %} disabled></td>
                 <td class="col-1">{{ record.notes }}</td>
                 <td class="col-1">

@@ -40,7 +40,7 @@
         <tr>
             <td>{{actual.user_name}}</td>
             <td>{{ actual.date }}</td>
-            <td><input type="checkbox" name="dt_s_{{ actual.id}}" {% if actual.dt_s %}checked{% endif %}></td>
+            <td>{{actual.ds}}</td>
             <td>{{ actual.type.name }}</td>
             <td><input type="time" name="start_time_{{ actual.id}}" value="{{actual.start_time}}"></td>
             <td><input type="time" name="end_time_{{ actual.id}}" value="{{actual.end_time}}"></td>

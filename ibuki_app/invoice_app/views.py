@@ -9,7 +9,7 @@ from django.views import generic
 from django.db.models import Q
 from dateutil.relativedelta import relativedelta
 import datetime
-from datetime import timedelta
+from datetime import timedelta,date
 from django.http import HttpResponse
 
 
@@ -102,9 +102,9 @@ def actual_bulk_edit(request):
         # Get all records and set checkboxes to off
         all_records = Actual.objects.all()
         for record in all_records:
-            record.dt_s = False
-            record.transportation = False
-            record.bathing = False
+            record.dts = False
+            record.transportation1 = False
+            record.transportation2 = False
             record.meal = False
             record.addons.clear()
             record.save()
@@ -122,12 +122,12 @@ def actual_bulk_edit(request):
                     record.start_time = value
                 elif key.startswith("end_time-"):
                     record.end_time = value
-                elif key.startswith("dt_s-"):
+                elif key.startswith("ds-"):
                     record.dt_s = (value == 'on')
-                elif key.startswith("transportation-"):
-                    record.transportation = (value == 'on')
-                elif key.startswith("bathing-"):
-                    record.bathing = (value == 'on')
+                elif key.startswith("transportation1-"):
+                    record.transportation1 = (value == 'on')
+                elif key.startswith("transportation2-"):
+                    record.transportation2 = (value == 'on')
                 elif key.startswith("meal-"):
                     record.meal = (value == 'on')
                 elif key.startswith("notes-"):
@@ -162,11 +162,18 @@ def actual_delete(request,actual_id):
 def service_record_list(request):
 
     clients_list = Client.objects.all()
+    today = date.today()
 
-    year = request.POST.get('year')
-    month = request.POST.get('month')
-    name = request.POST.get('name')
-    client_id = request.POST.get('client.id')
+    if request.method == 'POST':
+        year = request.POST.get('year')
+        month = request.POST.get('month')
+        name = request.POST.get('name')
+        client_id = request.POST.get('name')
+    else:
+        year = today.year
+        month = today.month
+        name = None
+        client_id = None
     
     
     if name and year and month:
