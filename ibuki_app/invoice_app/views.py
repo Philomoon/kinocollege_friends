@@ -1,9 +1,9 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from django.views.generic.edit import UpdateView
 from django.forms import modelformset_factory,inlineformset_factory
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy,reverse
 from django.utils import timezone
-from .models import Client,Actual,Invoice,ServiceLine,Service
+from .models import Client,Actual,Invoice,AddonType,ServicePrice
 from .forms import ClientForm,ActualForm,InvoiceCreateForm
 from django.views import generic
 from django.db.models import Q
@@ -49,7 +49,7 @@ def client_list(request):
 
 class Client_modify(UpdateView):
     model = Client
-    fields = ['client_name','client_kana','client_gender','number','insurer','room_number']
+    fields = ['client_name','client_kana','client_gender','insurer','class_obst','class_num','insurance_id','max_amount']
     template_name_suffix = '_modify_form' 
 
     success_url = reverse_lazy('client_list')
@@ -86,15 +86,20 @@ def actual_list(request):
     return render(request,'invoice_app/actual_list.html',params)
 
 def actual_edit(request, actual_id):
-    actual = get_object_or_404(Actual, id=actual_id)  # 指定されたIDのActualデータを取得
-    if request.method == 'POST':
-        form = ActualForm(request.POST, instance=actual)
+    instance = get_object_or_404(Actual, id=actual_id)
+    
+    if request.method == "POST":
+        form = ActualForm(request.POST, instance=instance)
+        
         if form.is_valid():
-            form.save()  # フォームの内容を保存
-            return redirect('actual_list')  # 一覧ページにリダイレクト
+            form.save()
+            # リダイレクト先を設定（例：actual_listが詳細ページのURL名だと仮定）
+            return redirect(reverse_lazy('actual_list'))
+    
     else:
-        form = ActualForm(instance=actual)
-    return render(request, 'invoice_app/actual_edit.html', {'form': form, 'actual': actual})
+        form = ActualForm(instance=instance)
+
+    return render(request, 'invoice_app/actual_edit.html', {'form': form})
 
 def actual_bulk_edit(request):
     if request.method == "POST":
@@ -160,7 +165,6 @@ def actual_delete(request,actual_id):
 
 
 def service_record_list(request):
-
     clients_list = Client.objects.all()
     today = date.today()
 
@@ -175,7 +179,41 @@ def service_record_list(request):
         name = None
         client_id = None
     
-    
+
+    try:
+        clients = Client.objects.get(id=name)
+        service_priceA = ServicePrice.objects.get(
+                        insurer=clients.insurer,
+                        service=4,
+                        class_obst=clients.class_obst,
+                        class_num=clients.class_num,
+                    ).price
+        service_priceB = ServicePrice.objects.get(
+                        insurer=clients.insurer,
+                        service=5,
+                        class_obst=clients.class_obst,
+                        class_num=clients.class_num,
+                    ).price
+        service_priceC = ServicePrice.objects.get(
+                        insurer=clients.insurer,
+                        service=6,
+                        class_obst=clients.class_obst,
+                        class_num=clients.class_num,
+                    ).price
+        service_priceD = ServicePrice.objects.get(
+                        insurer=clients.insurer,
+                        service=7,
+                        class_obst=clients.class_obst,
+                        class_num=clients.class_num,
+                    ).price   
+    except (Client.DoesNotExist,ServicePrice.DoesNotExist):
+        service_priceA = 1
+        service_priceB = 1
+        service_priceC = 1
+        service_priceD = 940
+
+
+
     if name and year and month:
         service_records = Actual.objects.filter(user_name=name,date__year=year,date__month=month).all().select_related('user_name','type').order_by('date')
     elif name:
@@ -186,7 +224,27 @@ def service_record_list(request):
         service_records = Actual.objects.all().select_related('user_name','type').order_by('date')
     
     
+    total_sum = sum([record.total_amount for record in service_records])
 
+    count_meal = service_records.filter(meal=True).count()
+    amount_meal = count_meal * AddonType.objects.get(name='食事').base_price
+
+    count_t1 = service_records.filter(transportation1=True).count()
+    count_t2 = service_records.filter(transportation2=True).count()
+    count_trans = count_t1 + count_t2
+    amount_trans = count_trans * AddonType.objects.get(name='送迎').base_price
+    
+    count_serviceA = service_records.filter(type=4).count()
+    count_serviceB = service_records.filter(type=5).count()
+    count_serviceC = service_records.filter(type=6).count()
+    count_serviceD = service_records.filter(type=7).count()
+
+    amount_serviceA = count_serviceA * service_priceA
+    amount_serviceB = count_serviceB * service_priceB
+    amount_serviceC = count_serviceC * service_priceC
+    amount_serviceD = count_serviceD * service_priceD
+
+    
     params ={
         'service_records':service_records,
         'clients_list':clients_list,
@@ -195,34 +253,30 @@ def service_record_list(request):
         'year':year,
         'month':month,
         'name':name,
+        'total_sum': total_sum,
+        'count_meal':count_meal,
+        'amount_meal':amount_meal,
+        'count_trans':count_trans,
+        'amount_trans':amount_trans,
+        'count_serviceA':count_serviceA,
+        'count_serviceB':count_serviceB,
+        'count_serviceC':count_serviceC,
+        'count_serviceD':count_serviceD,
+        'amount_serviceA':amount_serviceA,
+        'amount_serviceB':amount_serviceB,
+        'amount_serviceC':amount_serviceC,
+        'amount_serviceD':amount_serviceD,
 
         }
+    
     return render(request,'invoice_app/service_records_list.html',params)
 
 def record_list_modify(request):
+    model = Actual
+    fields = []
+    template_name_suffix = '_modify_form' 
 
-    clients_list = Client.objects.all()
-
-    year = request.POST.get('year')
-    month = request.POST.get('month')
-    name = request.POST.get('name')
-    
-    if name and year and month:
-        service_records = Actual.objects.filter(user_name=name,date__year=year,date__month=month).all().select_related('user_name','type').order_by('date')
-    elif name:
-        service_records = Actual.objects.filter(user_name=name).all().select_related('user_name','type').order_by('date')
-    elif year and month:
-        service_records = Actual.objects.filter(date__year=year,date__month=month).all().select_related('user_name','type').order_by('date')
-    else:
-        service_records = Actual.objects.all().select_related('user_name','type').order_by('date')
-
-    
-
-    params ={
-        'service_records':service_records,
-        'clients_list':clients_list,
-    }
-    return render(request,'invoice_app/records_modify.html',params)
+    success_url = reverse_lazy('client_list')
 
 
 def custmer_view(request,client_id):

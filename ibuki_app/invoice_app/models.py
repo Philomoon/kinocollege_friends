@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Sum, Count,F
 from django.core.validators import MaxValueValidator,MinValueValidator
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from datetime import datetime,date,time
 from datetime import datetime as dt
@@ -12,12 +13,12 @@ class Insurer(models.Model):
     def __str__(self) -> str:
         return self.insurer_name
 class Class_OBST(models.Model):
-    category = models.CharField(max_length=5)
+    category = models.CharField('障害種別',max_length=5)
 
     def __str__(self) -> str:
         return self.category
 class Class_NUM(models.Model):
-    category = models.CharField(max_length=5)
+    category = models.CharField('障害区分',max_length=5)
 
     def __str__(self) -> str:
         return self.category
@@ -34,13 +35,16 @@ class Client (models.Model):
     client_kana = models.CharField('ふりがな',max_length=100)
     # 性別
     client_gender = models.CharField('性別',max_length=2,choices=GENDER_CHOICES)
-    # 障害区分
+    # 障害種別
     class_obst= models.ForeignKey(Class_OBST,on_delete=models.CASCADE)
     # 区分
     class_num= models.ForeignKey(Class_NUM,on_delete=models.CASCADE)
     # 保険者
     insurer = models.ForeignKey(Insurer,on_delete=models.CASCADE)
-
+    #受給者番号
+    insurance_id = models.CharField('受給者番号(日中一時)',null=True,blank=True)
+    #負担上限額
+    max_amount = models.IntegerField('負担上限額',default=0)
 
     def __str__(self):
         return self.client_name
@@ -56,7 +60,7 @@ class ServiceType(models.Model):
         ('E','生活介護'),
     )
     servicename = models.CharField(max_length=100, choices=SERVICE_CHOICES)
-    insurers = models.ManyToManyField(Insurer, through='ServicePrice')
+    insurers = models.ManyToManyField(Insurer)
 
     def __str__(self):
         return self.get_servicename_display()
@@ -131,7 +135,6 @@ class Actual(models.Model):
     # 備考
     notes = models.TextField('備考',blank=True)
 
-    # 加算まとめ
     addons = models.ManyToManyField(AddonType)
 
 
@@ -158,9 +161,9 @@ class Actual(models.Model):
             self.addons.add(addon)
             
         if self.ds == '日中一時':
-            if self.duration <= 3:  # For instance, this could be your criterion for short duration
+            if self.duration < 4:  # For instance, this could be your criterion for short duration
                 self.type = ServiceType.objects.get(id=4)
-            elif self.duration <= 6:
+            elif self.duration < 8:
                 self.type = ServiceType.objects.get(id=5)
             else:
                 self.type = ServiceType.objects.get(id=6)
@@ -172,11 +175,19 @@ class Actual(models.Model):
 
         super().save(*args,**kwargs)
 
-
-
     @property
     def total_amount(self):
-        base_amount = ServicePrice.objects.get(insurer=self.user_name.insurer, service=self.type,class_obst=self.user_name.class_obst,class_num=self.user_name.class_num).price
+        # base_amount = ServicePrice.objects.get(insurer=self.user_name.insurer, service=self.type,class_obst=self.user_name.class_obst,class_num=self.user_name.class_num).price
+        try:
+            base_amount = ServicePrice.objects.get(
+                insurer=self.user_name.insurer,
+                service=self.type,
+                class_obst=self.user_name.class_obst,
+                class_num=self.user_name.class_num
+            ).price
+        except ObjectDoesNotExist:
+            base_amount = 0 
+
         addons_amount =  sum([addon.base_price for addon in self.addons.all()])
         
         try:
@@ -190,6 +201,8 @@ class Actual(models.Model):
 
     class Meta:
         unique_together = ['user_name','date']
+
+
 
 class Invoice(models.Model):
     customer = models.ForeignKey(Client, on_delete=models.CASCADE)

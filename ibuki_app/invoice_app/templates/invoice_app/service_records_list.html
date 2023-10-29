@@ -6,31 +6,61 @@
 
 {% block title %}test画面{% endblock%}
 
+{% block extra_head %}
+<style>
+@media print {
+    header,h1{
+        display: none;
+    }
+    div *:is(#non-print-area){
+        display: none;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    table, th, td {
+        border: 1px solid black;
+    }
+    thead {
+        display: table-header-group;
+    }
+    tbody {
+        display: table-row-group;
+    }
+}
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container mt-5" style="width: 500px;">
-    <h1>Service Records</h1>
-    <div>
+    <h1>サービス実績</h1>
+    <div id="non-print-area">
         <form class="row" method="POST">
             {% csrf_token %}
-            <select name="name">
-                {%for client in clients_list%}
-                <option value="{{ client.id }}" {% if client.id|stringformat:"s" == client_id %}selected{% endif %}>{{ client.client_name }}</option>
-                {%endfor%}
-            </select>
+            <div class="btn-group" role="group">
+                <select class="form-control" name="name">
+                    {%for client in clients_list%}
+                    <option value="{{ client.id }}" {% if client.id|stringformat:"s" == client_id %}selected{% endif %}>{{ client.client_name }}</option>
+                    {%endfor%}
+                </select>
+                
+                <input type="text" class="form-control" id="datepicker" name="ym" value="{{year}}-{{month}}">
+                <input type="hidden" id="year" name="year" value="{{year}}">
+                <input type="hidden" id="month" name="month" value="{{month}}">    
+            </div>
+
             
-            <input type="text" class="form-control" id="datepicker" name="ym" value="{{year}}-{{month}}">
-            <input type="hidden" id="year" name="year" value="{{year}}">
-            <input type="hidden" id="month" name="month" value="{{month}}">
-            
-            <button type="submit" class="btn btn-primary">View</button>
+            <div class="btn-group" role="group">
+                <button type="submit" class="btn btn-info">利用者別一覧</button>
+                <a href=""class="btn btn-secondary" >当月 全実績一覧</a>
+            </div>
         </form>
         
-        <a href="" class="btn btn-primary d-flex align-items-center justify-content-center" >Create</a>
         <!-- ↓を次のように変更するhref"% url 'invoice_create' %}?year={{ year }}&month={{ month }}" class="btn btn-primary mb-3">Create Invoice -->
     </div>
 </div>
-<div class="mb-5">
+<div class="mb-5" id="printable-area">
     <table class="table table-bordered table-hover m-3">
         <thead>
             <tr>
@@ -48,33 +78,78 @@
                 <!-- 他の列を追加 -->
             </tr>
         </thead>
+
         <tbody>
             {% for record in service_records %}
-            <tr>
-                <td class="col-1">{{ record.user_name}}</td>
-                <td class="col-1">{{ record.date }}</td>
-                <td >{{ record.start_time }}</td>ß
-                <td >{{ record.end_time }}</td>
-                <td class="col-1">{{ record.type.get_servicename_display }}</td>
-                <td ><input class="col-12" type="checkbox" {% if record.transportation1 %}checked{% endif %} disabled></td>
-                <td><input class="col-12" type="checkbox" {% if record.transportation2 %}checked{% endif %} disabled></td>
-                <td><input class="col-12" type="checkbox" {% if record.meal %}checked{% endif %} disabled></td>
-                <td class="col-1">{{ record.notes }}</td>
-                <td class="col-1">
-                    {% for addon in record.addons.all %}
-                    {{ addon.name }}
-                    {% if not forloop.last %}, {% endif %}
-                    {% endfor %}
-                </td>
-                <td class="col-1">{{ record.total_amount }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">No records found.</td>
-            </tr>
-            {% endfor %}
+                <tr>
+                    <td class="col-1">{{ record.user_name}}</td>
+                    <td class="col-2">{{ record.date }} ({{ record.date|date:"D" }})</td>
+                    <td class="col-1">{{ record.start_time }}</td>
+                    <td >{{ record.end_time }}</td>
+                    <td class="col-1">{{ record.type.get_servicename_display }}</td>
+                    <td ><input class="col-1" type="checkbox" {% if record.transportation1 %}checked{% endif %} disabled></td>
+                    <td><input class="col-1" type="checkbox" {% if record.transportation2 %}checked{% endif %} disabled></td>
+                    <td><input class="col-1" type="checkbox" {% if record.meal %}checked{% endif %} disabled></td>
+                    <td class="col-1">{{ record.notes }}</td>
+                    <td class="col-1">
+                        {% for addon in record.addons.all %}
+                        {{ addon.name }}
+                        {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td class="col-1">{{ record.total_amount }}</td>
+                    
+                    <td>
+                        <a href="{% url 'actual_edit' record.id %}" class="btn btn-primary">修正</a> <!-- 修正ボタン -->
+                        <a href="{% url 'actual_delete' record.id %}" class="btn btn-danger">削除</a> <!-- 削除ボタン -->
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">No records found.</td>
+                </tr>
+                {% endfor %}
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="10">Total:</td>
+                <td>{{ total_sum }}</td>
+            </tr>
+            <tr>
+                <td colspan="10">日中一時（〜4）:</td>
+                <td class="col-1">{{ count_serviceA }}</td>
+                <td class="col-1">{{ amount_serviceA }}</td>
+            </tr>
+            <tr>
+                <td colspan="10">日中一時（4〜8）:</td>
+                <td class="col-1">{{ count_serviceB }}</td>
+                <td class="col-1">{{ amount_serviceB }}</td>
+            </tr>
+            <tr>
+                <td colspan="10">日中一時（8〜）:</td>
+                <td class="col-1">{{ count_serviceC }}</td>
+                <td class="col-1">{{ amount_serviceC }}</td>
+            </tr>
+            <tr>
+                <td colspan="10">日中一時（併給）:</td>
+                <td class="col-1">{{ count_serviceD }}</td>
+                <td class="col-1">{{ amount_serviceD }}</td>
+            </tr>
+            <tr>
+                <td colspan="10">送迎回数:</td>
+                <td class="col-1">{{ count_trans }}</td>
+                <td class="col-1">{{ amount_trans }}</td>
+            </tr> 
+            <tr>
+                <td colspan="10">食事回数:</td>
+                <td class="col-1">{{ count_meal }}</td>
+                <td class="col-1">{{ amount_meal }}</td>
+            </tr> 
+            
+            
     </table>
+    
+    <button onclick="window.print();">印刷</button>
 </div>
     
 <script>

@@ -15,19 +15,22 @@
             <th>名前</th>
             <th>ふりがな</th>
             <th>性別</th>
-            <th>電話番号</th>
             <th>保険者</th>
-            <th>部屋番号</th>
+            <th>障害種別</th>
+            <th>障害区分</th>
+            <th>受給者番号</th>
+            <th>負担上限額</th>
         </tr>
         {% for client in clients %}
         <tr>
             <td>{{ client.client_name }}</td>
             <td>{{ client.client_kana }}</td>
             <td>{{ client.client_gender }}</td>
-            <td>{{ client.number }}</td>
             <td>{{ client.insurer }}</td>
-            <td>{{ client.room_number }}</td>
-            
+            <td>{{ client.class_obst }}</td>
+            <td>{{ client.class_num }}</td>
+            <td>{{ client.insurance_id }}</td>
+            <td>{{ client.max_amount }}</td>
             <td>
                 <a href="{%url 'client_modify' client.id %}" class="btn btn-primary">修正</a> <!-- 修正ボタン -->
                 <a href="{%url 'client_delete' client.id %}" class="btn btn-danger">削除</a> <!-- 削除ボタン -->

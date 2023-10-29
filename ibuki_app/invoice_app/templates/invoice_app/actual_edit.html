@@ -1,19 +1,22 @@
 
 {% extends 'invoice_app/base.html' %}
 
+<head>
+    <!-- other head elements -->
+    {{ form.media }}
+</head>
+
 {% block title %}メイン画面{% endblock%}
 
 {%block content %}
 
 
-<body>
-    <h1>Edit Actual</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">保存</button>
-    </form>
-</body>
-
+<h2>Edit Actual</h2>
+<form  method="post">
+    {% csrf_token %}
+    {{ form.as_table }}  
+    <button type="submit">Update</button>
+</form>
+<a href="{% url 'actual_list' %}">Cancel</a>
 
 {%endblock%}
